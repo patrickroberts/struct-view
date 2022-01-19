@@ -1,0 +1,111 @@
+{
+  "env": {
+    "es2020": true,
+    "jest/globals": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "airbnb-base"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "jest"
+  ],
+  "root": true,
+  "rules": {
+    "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/consistent-type-definitions": [
+      "error",
+      "interface"
+    ],
+    "@typescript-eslint/func-call-spacing": "error",
+    "@typescript-eslint/indent": [
+      "error",
+      2
+    ],
+    "@typescript-eslint/lines-between-class-members": "error",
+    "@typescript-eslint/member-delimiter-style": "error",
+    "@typescript-eslint/no-dupe-class-members": "error",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-redeclare": "error",
+    "@typescript-eslint/no-shadow": "error",
+    "@typescript-eslint/no-use-before-define": [
+      "error"
+    ],
+    "@typescript-eslint/semi": "error",
+    "@typescript-eslint/space-before-function-paren": [
+      "error",
+      {
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ],
+    "func-call-spacing": "off",
+    "function-paren-newline": [
+      "error",
+      "consistent"
+    ],
+    "import/extensions": [
+      "error",
+      "never",
+      {
+        "json": "always"
+      }
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "*.js",
+          "**/*.test.ts"
+        ]
+      }
+    ],
+    "indent": "off",
+    "lines-between-class-members": "off",
+    "max-classes-per-file": "off",
+    "no-bitwise": "off",
+    "no-dupe-class-members": "off",
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ],
+    "no-plusplus": [
+      "error",
+      {
+        "allowForLoopAfterthoughts": true
+      }
+    ],
+    "no-redeclare": "off",
+    "no-shadow": "off",
+    "no-spaced-func": "off",
+    "no-unused-vars": "off",
+    "no-use-before-define": "off",
+    "object-curly-newline": [
+      "error",
+      {
+        "consistent": true
+      }
+    ],
+    "semi": "off",
+    "space-before-function-paren": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".ts"
+        ]
+      }
+    }
+  }
+}
