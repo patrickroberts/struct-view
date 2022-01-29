@@ -46,27 +46,23 @@ const assertAllowed = (name: string) => {
 };
 
 const typedArrayMap = {
-  BigInt64Array,
-  BigUint64Array,
-  Float32Array,
-  Float64Array,
-  Int8Array,
-  Int16Array,
-  Int32Array,
-  Uint8Array,
-  Uint16Array,
-  Uint32Array,
+  BigInt64: BigInt64Array,
+  BigUint64: BigUint64Array,
+  Float32: Float32Array,
+  Float64: Float64Array,
+  Int8: Int8Array,
+  Int16: Int16Array,
+  Int32: Int32Array,
+  Uint8: Uint8Array,
+  Uint16: Uint16Array,
+  Uint32: Uint32Array,
 };
 
-type TypedArrayMap = typeof typedArrayMap;
+export type Arithmetic = keyof typeof typedArrayMap;
 
-export type Arithmetic = keyof TypedArrayMap extends `${infer T}Array` ? T : never;
+type TypedArrays<T extends Arithmetic> = InstanceType<typeof typedArrayMap[T]>;
 
-type TypedArrayConstructors<T extends Arithmetic> = TypedArrayMap[`${T}Array`];
-
-type TypedArrays<T extends Arithmetic> = InstanceType<TypedArrayConstructors<T>>;
-
-const TypedArray: TypedArrayConstructors<Arithmetic> = Object.getPrototypeOf(Uint8Array);
+const TypedArray = Object.getPrototypeOf(Uint8Array);
 
 const named = (Constructor: any, length: number, name: string) => {
   assertAllowed(name);
@@ -102,13 +98,12 @@ const named = (Constructor: any, length: number, name: string) => {
 export interface ArithmeticFactory<T extends Arithmetic>
   extends NameFactory<TypedArrays<T>[number]>, LengthFactory<TypedArrays<T>> {}
 
-export interface TypeFactory {
-  <T extends Exclude<Arithmetic, 'Int8' | 'Uint8'>>(type: T, littleEndian?: boolean): ArithmeticFactory<T>;
-  <T extends Arithmetic>(type: T): ArithmeticFactory<T>;
+interface TypeFactory {
+  <T extends Arithmetic>(type: T, littleEndian?: boolean): ArithmeticFactory<T>;
 }
 
 const typedef: TypeFactory = (type: Arithmetic, littleEndian?: boolean): any => {
-  const ArrayConstructor = typedArrayMap[`${type}Array` as const];
+  const ArrayConstructor = typedArrayMap[type];
 
   if (!ArrayConstructor) {
     throw new TypeError(`Unexpected type ${type}`);
@@ -152,15 +147,31 @@ const typedef: TypeFactory = (type: Arithmetic, littleEndian?: boolean): any => 
 };
 
 const float32 = typedef('Float32', true);
+const float32le = float32;
+const float32be = typedef('Float32', false);
 const float64 = typedef('Float64', true);
+const float64le = float64;
+const float64be = typedef('Float64', false);
 const int8 = typedef('Int8');
 const int16 = typedef('Int16', true);
+const int16le = int16;
+const int16be = typedef('Int16', false);
 const int32 = typedef('Int32', true);
+const int32le = int32;
+const int32be = typedef('Int32', false);
 const int64 = typedef('BigInt64', true);
+const int64le = int64;
+const int64be = typedef('BigInt64', false);
 const uint8 = typedef('Uint8');
 const uint16 = typedef('Uint16', true);
+const uint16le = uint16;
+const uint16be = typedef('Uint16', false);
 const uint32 = typedef('Uint32', true);
+const uint32le = uint32;
+const uint32be = typedef('Uint32', false);
 const uint64 = typedef('BigUint64', true);
+const uint64le = uint64;
+const uint64be = typedef('BigUint64', true);
 
 export interface StructFactory<T> extends StructConstructor<T>, Factory<T>, NameFactory<T> {}
 
@@ -236,6 +247,7 @@ const union: LayoutFactory = layout(
 );
 
 export {
-  float32, float64, int8, int16, int32, int64, uint8, uint16, uint32, uint64,
-  typedef, struct, union,
+  float32, float32le, float32be, float64, float64le, float64be, int8, int16, int16le, int16be,
+  int32, int32le, int32be, int64, int64le, int64be, uint8, uint16, uint16le, uint16be, uint32,
+  uint32le, uint32be, uint64, uint64le, uint64be, struct, union,
 };
