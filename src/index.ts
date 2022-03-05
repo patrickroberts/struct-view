@@ -173,6 +173,38 @@ const uint64 = typedef('BigUint64', true);
 const uint64le = uint64;
 const uint64be = typedef('BigUint64', true);
 
+const textDecoder = new TextDecoder();
+const textEncoder = new TextEncoder();
+
+const utf8: LengthFactory<string> = (byteLength): any => (name: string) => {
+  assertAllowed(name);
+
+  return (Base: any, byteOffset: number) => class extends Base {
+    static BYTES_PER_INSTANCE = Math.max(Base.BYTES_PER_INSTANCE, byteOffset + byteLength);
+
+    get [name]() {
+      return textDecoder.decode(
+        new Uint8Array(this.buffer, this.byteOffset + byteOffset, byteLength),
+      );
+    }
+
+    set [name](value: any) {
+      textEncoder.encodeInto(
+        value,
+        new Uint8Array(this.buffer, this.byteOffset + byteOffset, byteLength),
+      );
+    }
+
+    toJSON() {
+      const object = super.toJSON();
+
+      object[name] = this[name];
+
+      return object;
+    }
+  };
+};
+
 export interface StructFactory<T> extends StructConstructor<T>, Factory<T>, NameFactory<T> {}
 
 type Contravariant<T> = (x: T) => void;
@@ -249,5 +281,5 @@ const union: LayoutFactory = layout(
 export {
   float32, float32le, float32be, float64, float64le, float64be, int8, int16, int16le, int16be,
   int32, int32le, int32be, int64, int64le, int64be, uint8, uint16, uint16le, uint16be, uint32,
-  uint32le, uint32be, uint64, uint64le, uint64be, struct, union,
+  uint32le, uint32be, uint64, uint64le, uint64be, utf8, struct, union,
 };
