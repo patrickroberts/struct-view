@@ -6,7 +6,7 @@ import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
 const input = 'src/index.ts';
-const name = 'pb';
+const name = 'SV';
 const production = process.env.NODE_ENV === 'production';
 const browserslist = pkg.browserslist[process.env.NODE_ENV];
 

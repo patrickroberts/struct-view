@@ -1,12 +1,12 @@
 {
-  "name": "protobuffer",
+  "name": "struct-view",
   "version": "1.0.0",
   "description": "UDL for defining binary structures",
-  "repository": "github:patrickroberts/protobuffer",
-  "main": "dst/cjs/protobuffer.js",
-  "module": "dst/esm/protobuffer.js",
-  "browser": "dst/umd/protobuffer.js",
-  "types": "dst/esm/protobuffer.d.ts",
+  "repository": "github:patrickroberts/struct-view",
+  "main": "dst/cjs/struct-view.js",
+  "module": "dst/esm/struct-view.js",
+  "browser": "dst/umd/struct-view.js",
+  "types": "dst/esm/struct-view.d.ts",
   "scripts": {
     "clean:test": "rimraf coverage",
     "clean:build": "rimraf dst",
