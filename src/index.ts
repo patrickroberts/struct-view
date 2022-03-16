@@ -180,6 +180,8 @@ export const utf8: SizedExtension<string> = (byteLength) => (name) => accessor(
   ),
 );
 
+export const char = utf8(1);
+
 type Contravariant<T> = (x: T) => void;
 
 type Intersect<Union> =
