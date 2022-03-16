@@ -239,10 +239,8 @@ const layout = (
 
 export const struct = layout(
   (extensions, Initial, byteOffset) => extensions.reduce(
-    (Base: any, extension) => extension(Base, Base.BYTES_PER_INSTANCE),
-    class extends Initial {
-      static BYTES_PER_INSTANCE = byteOffset;
-    },
+    (Base, extension, index) => extension(Base, index === 0 ? byteOffset : Base.BYTES_PER_INSTANCE),
+    Initial,
   ),
 );
 
