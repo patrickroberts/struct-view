@@ -5,9 +5,13 @@ class StructView<T> extends DataView {
     buffer = new ArrayBuffer(new.target.BYTES_PER_INSTANCE),
     byteOffset = 0,
     byteLength = buffer.byteLength - byteOffset,
-  ) { super(buffer, byteOffset, byteLength); }
+  ) {
+    super(buffer, byteOffset, byteLength);
+  }
 
-  toJSON(this: T): T { return { ...this }; }
+  toJSON(this: T): T {
+    return { ...this };
+  }
 }
 
 export type Struct<T> = StructView<T> & {
