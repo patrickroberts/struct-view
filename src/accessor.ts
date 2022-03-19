@@ -1,4 +1,4 @@
-import { Decorator } from './decorators';
+import type { Decorator } from './decorator';
 
 const accessor = <K extends string, T>(
   name: K,
@@ -7,7 +7,7 @@ const accessor = <K extends string, T>(
   set: (self: any, byteOffset: number, value: T) => void,
 ): Decorator<Record<K, T>> => (Base: any, byteOffset: number): any => {
   if (name in Base.prototype) {
-    throw new TypeError(`Property name ${name} not allowed`);
+    throw new TypeError(`Property '${name}' has already been defined`);
   }
 
   return class extends Base {

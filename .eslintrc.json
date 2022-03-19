@@ -31,13 +31,13 @@
     "@typescript-eslint/lines-between-class-members": "error",
     "@typescript-eslint/member-delimiter-style": "error",
     "@typescript-eslint/no-dupe-class-members": "error",
+    "@typescript-eslint/no-empty-function": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-redeclare": "error",
     "@typescript-eslint/no-shadow": "error",
-    "@typescript-eslint/no-use-before-define": [
-      "error"
-    ],
+    "@typescript-eslint/no-use-before-define": "error",
+    "@typescript-eslint/no-useless-constructor": "error",
     "@typescript-eslint/semi": "error",
     "@typescript-eslint/space-before-function-paren": [
       "error",
@@ -72,6 +72,7 @@
     "max-classes-per-file": "off",
     "no-bitwise": "off",
     "no-dupe-class-members": "off",
+    "no-empty-function": "off",
     "no-param-reassign": [
       "error",
       {
@@ -89,6 +90,7 @@
     "no-spaced-func": "off",
     "no-unused-vars": "off",
     "no-use-before-define": "off",
+    "no-useless-constructor": "off",
     "object-curly-newline": [
       "error",
       {

@@ -1,34 +1,45 @@
 import accessor from './accessor';
-import { ArithmeticDecorator } from './decorators';
+import type { ArrayPropertyFactory, PropertyFactory } from './factories';
 import named from './named';
-import { Types, types } from './types';
+import type { TypedArray, Types } from './types';
+import { types } from './types';
+
+export interface ArithmeticFactory<T extends Types> extends
+  PropertyFactory<TypedArray<T>[number]>,
+  ArrayPropertyFactory<TypedArray<T>> {}
 
 const arithmetic = <T extends Types>(
   type: T, littleEndian?: boolean,
-): ArithmeticDecorator<T> => (nameOrLength: string | number): any => {
-  const Constructor = types[`${type}Array` as const];
+): ArithmeticFactory<T> => (nameOrLength: string | number): any => {
+  const Constructor = types[type];
 
   switch (typeof nameOrLength) {
+    // PropertyFactory overload
     case 'string': {
       const name = nameOrLength;
       const byteLength = Constructor.BYTES_PER_ELEMENT;
-      const get = `get${type}`;
-      const set = `set${type}`;
+      const get = `get${type}` as const;
+      const set = `set${type}` as const;
 
       return accessor(
         name,
         byteLength,
-        (self, byteOffset) => self[get](byteOffset, littleEndian),
-        (self, byteOffset, value) => self[set](byteOffset, value, littleEndian),
+        (self, byteOffset) => new DataView(
+          self.buffer, self.byteOffset + byteOffset, byteLength,
+        )[get](0, littleEndian),
+        (self, byteOffset, value) => new DataView(
+          self.buffer, self.byteOffset + byteOffset, byteLength,
+        )[set](0, value as number & bigint, littleEndian),
       );
     }
+    // ArrayPropertyFactory overload
     case 'number': {
       const length = nameOrLength;
 
       return (name: string) => named(Constructor, length, name);
     }
     default:
-      throw new TypeError(`Expected name or length; got ${nameOrLength}`);
+      throw new TypeError(`The first argument must be of type string or number. Received ${nameOrLength}`);
   }
 };
 

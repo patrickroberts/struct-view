@@ -1,7 +1,7 @@
 import accessor from './accessor';
-import { Decorator } from './decorators';
-import { StructConstructor } from './struct';
-import { TypedArrayConstructor, Types } from './types';
+import type { Decorator } from './decorator';
+import type { StructConstructor } from './struct';
+import type { TypedArrayConstructor, Types } from './types';
 
 const isTypedArray = (
   Constructor: new (...args: any) => any,
@@ -21,10 +21,10 @@ const named = <K extends string, T extends StructConstructor<any> | TypedArrayCo
       new Constructor(self.buffer, self.byteOffset + byteOffset, length)
     ),
     (self, byteOffset, value) => {
-      const dst = new Uint8Array(self.buffer, self.byteOffset, self.byteLength);
+      const dst = new Uint8Array(self.buffer, self.byteOffset + byteOffset, byteLength);
       const src = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
 
-      dst.set(src, byteOffset);
+      dst.set(src);
     },
   );
 };

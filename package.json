@@ -1,7 +1,7 @@
 {
   "name": "struct-view",
   "version": "1.0.0",
-  "description": "UDL for defining binary structures",
+  "description": "Simple DSL for defining binary structures in JavaScript",
   "repository": "github:patrickroberts/struct-view",
   "main": "dst/cjs/struct-view.js",
   "module": "dst/esm/struct-view.js",

@@ -1,6 +1,6 @@
 import accessor from './accessor';
-import { Decorator } from './decorators';
-import { StructConstructor } from './struct';
+import type { Decorator } from './decorator';
+import type { StructConstructor } from './struct';
 
 const array = <K extends string, T>(
   Constructor: StructConstructor<T>,

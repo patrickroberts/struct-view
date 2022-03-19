@@ -1,61 +1,86 @@
-# template
+# struct-view
 
-[![build](https://badgen.net/github/checks/patrickroberts/template?icon=github&label=build)](https://github.com/patrickroberts/template/actions)
-[![coverage](https://badgen.net/codecov/c/github/patrickroberts/template?icon=codecov&label=coverage)](https://codecov.io/gh/patrickroberts/template)
-[![license](https://badgen.net/github/license/patrickroberts/template)](https://github.com/patrickroberts/template/blob/master/LICENSE)
+<!-- [![build](https://badgen.net/github/checks/patrickroberts/struct-view?icon=github&label=build)](https://github.com/patrickroberts/struct-view/actions)
+[![coverage](https://badgen.net/codecov/c/github/patrickroberts/struct-view?icon=codecov&label=coverage)](https://codecov.io/gh/patrickroberts/struct-view) -->
+[![license](https://badgen.net/github/license/patrickroberts/struct-view)](https://github.com/patrickroberts/struct-view/blob/master/LICENSE)
 
-## Rollup template for TypeScript projects
+## Simple DSL for defining binary structures in JavaScript
 
-### Features
+### Why struct-view?
 
-- [TypeScript]
-- [Babel]
-- [Rollup] bundles
-  - CommonJS
-  - ES Module
-  - UMD
-  - Types
-- [ESLint]
-  - [Airbnb Style]
-- [Jest]
-  - Allows TypeScript in test files
-- [TypeDoc]
-- [GitHub Workflows] for
-  - Building
-  - Code Coverage
-  - Documentation
-  - Publishing
+This library enables developers to define and use packed binary structures in JavaScript without any external dependencies. It is not intended for ABI-compliance or for use with foreign function interfaces.
 
-### Installation
+<!-- ### Installation
 
-```sh
-npx degit patrickroberts/template my-new-project
-cd my-new-project
-npm install
+```
+npm i struct-view
+yarn add struct-view
+``` -->
+
+### Example Usage
+
+```ts
+import { char, struct, uint16, uint32, uint8, union } from 'struct-view';
+
+const ChunkHeader = struct(
+  char(4)('chunkId'),
+  uint32('chunkSize'),
+);
+
+const WavHeader = struct(
+  ChunkHeader,
+  char(4)('format'),
+  struct(
+    ChunkHeader,
+    uint16('audioFormat'),
+    uint16('numChannels'),
+    uint32('sampleRate'),
+    uint32('byteRate'),
+    uint16('blockAlign'),
+    uint16('bitsPerSample'),
+  )('subChunk1'),
+  ChunkHeader('subChunk2'),
+);
+
+const Raw = uint8(WavHeader.BYTES_PER_INSTANCE);
+
+const RawWavHeader = union(
+  WavHeader('header'),
+  Raw('raw'),
+);
+
+const { header, raw } = new RawWavHeader();
+
+header.chunkId = 'RIFF';
+header.chunkSize = header.byteLength - ChunkHeader.BYTES_PER_INSTANCE;
+header.format = 'WAVE';
+
+const { subChunk1, subChunk2 } = header;
+
+subChunk1.chunkId = 'fmt ';
+subChunk1.chunkSize = header.subChunk1.byteLength - ChunkHeader.BYTES_PER_INSTANCE;
+subChunk1.audioFormat = 1;
+subChunk1.numChannels = 1;
+subChunk1.sampleRate = 44100;
+subChunk1.byteRate = 88200;
+subChunk1.blockAlign = 2;
+subChunk1.bitsPerSample = 16;
+
+subChunk2.chunkId = 'data';
+
+process.stdout.write(raw);
 ```
 
-### Getting Started
+<!-- ### Documentation
 
-To begin live development with incremental building and testing
+API Reference available on [GitHub Pages](https://patrickroberts.github.io/struct-view)
 
-```sh
-npm run watch
-```
+### Code Coverage
 
-### Continuous Integration
+Available on [Codecov](https://codecov.io/gh/patrickroberts/struct-view) -->
 
-Every push to the `master` branch will trigger an automated build and deploy generated documentation to GitHub Pages from the root of the `gh-pages` branch.
+### Todo
 
-Every release will publish the package pre-bundled to [npm]. You need to configure your credentials by [creating a secret] with the name [`NPM_TOKEN`].
-
-[TypeScript]: https://www.typescriptlang.org/
-[Babel]: https://babeljs.io/
-[Rollup]: https://rollupjs.org/
-[ESLint]: https://eslint.org/
-[Airbnb Style]: https://github.com/airbnb/javascript
-[Jest]: https://jestjs.io/
-[TypeDoc]: https://typedoc.org/
-[GitHub Workflows]: https://docs.github.com/actions
-[npm]: https://www.npmjs.com/
-[creating a secret]: https://docs.github.com/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository
-[`NPM_TOKEN`]: https://docs.npmjs.com/using-private-packages-in-a-ci-cd-workflow
+* Testing
+* Documentation
+* Bitfield Support
