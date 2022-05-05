@@ -19,8 +19,10 @@ yarn add struct-view
 
 ### Example Usage
 
-```ts
-import { char, struct, uint16, uint32, uint8, union } from 'struct-view';
+Writing a WAV header:
+```js
+// wav.js
+const { char, struct, uint16, uint32, uint8, union } = require('struct-view');
 
 const ChunkHeader = struct(
   char(4)('chunkId'),
@@ -42,23 +44,20 @@ const WavHeader = struct(
   ChunkHeader('subChunk2'),
 );
 
-const Raw = uint8(WavHeader.BYTES_PER_INSTANCE);
-
 const RawWavHeader = union(
-  WavHeader('header'),
-  Raw('raw'),
+  WavHeader,
+  uint8(WavHeader.BYTES_PER_INSTANCE)('raw'),
 );
 
-const { header, raw } = new RawWavHeader();
+const header = new RawWavHeader();
+const { subChunk1, subChunk2, raw } = header;
 
 header.chunkId = 'RIFF';
 header.chunkSize = header.byteLength - ChunkHeader.BYTES_PER_INSTANCE;
 header.format = 'WAVE';
 
-const { subChunk1, subChunk2 } = header;
-
 subChunk1.chunkId = 'fmt ';
-subChunk1.chunkSize = header.subChunk1.byteLength - ChunkHeader.BYTES_PER_INSTANCE;
+subChunk1.chunkSize = subChunk1.byteLength - ChunkHeader.BYTES_PER_INSTANCE;
 subChunk1.audioFormat = 1;
 subChunk1.numChannels = 1;
 subChunk1.sampleRate = 44100;
@@ -69,6 +68,14 @@ subChunk1.bitsPerSample = 16;
 subChunk2.chunkId = 'data';
 
 process.stdout.write(raw);
+```
+
+Output:
+```
+node wav | xxd
+00000000: 5249 4646 2400 0000 5741 5645 666d 7420  RIFF$...WAVEfmt 
+00000010: 1000 0000 0100 0100 44ac 0000 8858 0100  ........D....X..
+00000020: 0200 1000 6461 7461 0000 0000            ....data....
 ```
 
 <!-- ### Documentation
