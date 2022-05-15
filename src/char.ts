@@ -1,8 +1,8 @@
 import accessor from './accessor';
 import type { ArrayPropertyFactory, PropertyFactory } from './factories';
 
-const textDecoder = new TextDecoder();
-const textEncoder = new TextEncoder();
+const textDecoder = new globalThis.TextDecoder();
+const textEncoder = new globalThis.TextEncoder();
 
 const string = (name: string, byteLength: number) => accessor(
   name,

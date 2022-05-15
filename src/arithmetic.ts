@@ -67,5 +67,5 @@ export const uint32 = arithmetic('Uint32', true);
 export const uint32be = arithmetic('Uint32', false);
 export const uint32le = uint32;
 export const uint64 = arithmetic('BigUint64', true);
-export const uint64be = arithmetic('BigUint64', true);
+export const uint64be = arithmetic('BigUint64', false);
 export const uint64le = uint64;
