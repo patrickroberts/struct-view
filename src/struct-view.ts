@@ -1,3 +1,5 @@
+import type { Struct, StructConstructor } from './struct';
+
 const bufferSym = Symbol('buffer');
 const byteOffsetSym = Symbol('byteOffset');
 const byteLengthSym = Symbol('byteLength');
@@ -5,8 +7,17 @@ const byteLengthSym = Symbol('byteLength');
 export default class StructView<T = {}> {
   static BYTES_PER_INSTANCE = 0;
 
+  static from(
+    this: StructConstructor<unknown>,
+    array: ArrayBufferView,
+    byteOffset = array.byteOffset,
+    byteLength = this.BYTES_PER_INSTANCE,
+  ): Struct<unknown> {
+    return new this(array.buffer, byteOffset, byteLength);
+  }
+
   /** @internal */
-  private [bufferSym]: ArrayBuffer;
+  private [bufferSym]: ArrayBufferLike;
 
   /** @internal */
   private [byteOffsetSym]: number;
@@ -25,7 +36,7 @@ export default class StructView<T = {}> {
     this[byteLengthSym] = byteLength;
   }
 
-  get buffer(): ArrayBuffer {
+  get buffer(): ArrayBufferLike {
     return this[bufferSym];
   }
 

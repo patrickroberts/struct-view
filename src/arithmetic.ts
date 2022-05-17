@@ -8,6 +8,11 @@ export interface ArithmeticFactory<T extends Types> extends
   PropertyFactory<TypedArray<T>[number]>,
   ArrayPropertyFactory<TypedArray<T>> {}
 
+const nativeEndian = (() => {
+  const { buffer, byteOffset, byteLength } = new Uint16Array([0x1234]);
+  return new DataView(buffer, byteOffset, byteLength).getUint8(0) === 0x34;
+})();
+
 const arithmetic = <T extends Types>(
   type: T, littleEndian?: boolean,
 ): ArithmeticFactory<T> => (nameOrLength: string | number): any => {
@@ -34,6 +39,10 @@ const arithmetic = <T extends Types>(
     }
     // ArrayPropertyFactory overload
     case 'number': {
+      if (littleEndian !== nativeEndian) {
+        throw new TypeError('Cannot define numeric array property type because it does not match platform endianness');
+      }
+
       const length = nameOrLength;
 
       return (name: string) => named(Constructor, length, name);

@@ -23,8 +23,10 @@ const accessor = <K extends string, T>(
 
     toJSON() {
       const object = super.toJSON();
+      const value = this[name];
+      const { toJSON } = value;
 
-      object[name] = this[name];
+      object[name] = typeof toJSON === 'function' ? toJSON.call(value) : value;
 
       return object;
     }

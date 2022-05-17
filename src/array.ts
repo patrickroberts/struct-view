@@ -16,10 +16,9 @@ const array = <K extends string, T>(
       const value = [];
 
       for (let index = 0; index < length; ++index) {
-        value[index] = new Constructor(
-          self.buffer,
+        value[index] = Constructor.from(
+          self,
           self.byteOffset + byteOffset + index * Constructor.BYTES_PER_INSTANCE,
-          Constructor.BYTES_PER_INSTANCE,
         );
       }
 

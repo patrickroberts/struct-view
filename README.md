@@ -88,6 +88,5 @@ Available on [Codecov](https://codecov.io/gh/patrickroberts/struct-view) -->
 
 ### Todo
 
-* Testing
 * Documentation
 * Bitfield Support
