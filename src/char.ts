@@ -1,16 +1,17 @@
 import accessor from './accessor';
 import type { ArrayPropertyFactory, PropertyFactory } from './factories';
+import memoize from './memoize';
 
-const textDecoder = new globalThis.TextDecoder();
-const textEncoder = new globalThis.TextEncoder();
+const getTextDecoder = memoize(() => new globalThis.TextDecoder());
+const getTextEncoder = memoize(() => new globalThis.TextEncoder());
 
 const string = (name: string, byteLength: number) => accessor(
   name,
   byteLength,
-  (self, byteOffset) => textDecoder.decode(
+  (self, byteOffset) => getTextDecoder().decode(
     new Uint8Array(self.buffer, self.byteOffset + byteOffset, byteLength),
   ),
-  (self, byteOffset, value) => textEncoder.encodeInto(
+  (self, byteOffset, value) => getTextEncoder().encodeInto(
     value,
     new Uint8Array(self.buffer, self.byteOffset + byteOffset, byteLength),
   ),

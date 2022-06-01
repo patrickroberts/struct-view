@@ -1,5 +1,6 @@
 import accessor from './accessor';
 import type { ArrayPropertyFactory, PropertyFactory } from './factories';
+import memoize from './memoize';
 import named from './named';
 import type { TypedArray, Types } from './types';
 import { types } from './types';
@@ -8,10 +9,10 @@ export interface ArithmeticFactory<T extends Types> extends
   PropertyFactory<TypedArray<T>[number]>,
   ArrayPropertyFactory<TypedArray<T>> {}
 
-const nativeEndian = (() => {
+const nativeEndian = memoize(() => {
   const { buffer, byteOffset, byteLength } = new Uint16Array([0x1234]);
   return new DataView(buffer, byteOffset, byteLength).getUint8(0) === 0x34;
-})();
+});
 
 const arithmetic = <T extends Types>(
   type: T, littleEndian?: boolean,
@@ -39,7 +40,7 @@ const arithmetic = <T extends Types>(
     }
     // ArrayPropertyFactory overload
     case 'number': {
-      if (littleEndian !== nativeEndian) {
+      if (littleEndian !== nativeEndian()) {
         throw new TypeError('Cannot define numeric array property type because it does not match platform endianness');
       }
 

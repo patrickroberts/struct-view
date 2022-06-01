@@ -14,6 +14,7 @@ describe('layout', () => {
 
     expect(derived).toBeInstanceOf(Base);
     expect(derived).toBeInstanceOf(Derived);
+    expect(derived).toHaveProperty('a');
   });
 
   it('should support composition', () => {
@@ -30,6 +31,7 @@ describe('layout', () => {
 
     expect(outer).not.toBeInstanceOf(Inner);
     expect(outer).toBeInstanceOf(Outer);
+    expect(outer).toHaveProperty('b');
   });
 
   it('should support union types', () => {
@@ -44,6 +46,31 @@ describe('layout', () => {
 
     expect(Alias.BYTES_PER_INSTANCE).toBe(1);
     expect(alias.b).toBe(42);
+  });
+
+  it('should support overloaded constructors', () => {
+    const Type = struct();
+    const storage = new Uint8Array(3);
+
+    expect(new Type()).toMatchObject({
+      byteOffset: 0,
+      byteLength: 0,
+    });
+
+    expect(new Type(storage.buffer)).toMatchObject({
+      byteOffset: 0,
+      byteLength: storage.buffer.byteLength,
+    });
+
+    expect(new Type(storage.buffer, 1)).toMatchObject({
+      byteOffset: 1,
+      byteLength: storage.buffer.byteLength - 1,
+    });
+
+    expect(new Type(storage.buffer, 1, 1)).toMatchObject({
+      byteOffset: 1,
+      byteLength: 1,
+    });
   });
 
   it('should throw TypeError on invalid call', () => {

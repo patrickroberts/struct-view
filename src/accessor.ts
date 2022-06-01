@@ -22,7 +22,7 @@ const accessor = <K extends string, T>(
     }
 
     toJSON() {
-      const object = super.toJSON();
+      const object = Base.prototype.toJSON.call(this);
       const value = this[name];
       const { toJSON } = value;
 
