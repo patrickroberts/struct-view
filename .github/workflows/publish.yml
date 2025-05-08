@@ -1,0 +1,31 @@
+name: Publish
+
+on:
+  release:
+    types: [ "published", "edited" ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Build
+      run: |
+        npm ci
+        npm run clean
+        npm run lint
+        npm run test -- --ci
+        npm run build
+
+    - name: Publish
+      uses: JS-DevTools/npm-publish@v3
+      with:
+        token: ${{ secrets.NPM_TOKEN }}
