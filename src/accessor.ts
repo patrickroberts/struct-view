@@ -22,11 +22,10 @@ const accessor = <K extends string, T>(
     }
 
     toJSON() {
-      const object = Base.prototype.toJSON.call(this);
-      const value = this[name];
-      const { toJSON } = value;
+      const object = super.toJSON();
+      const value: any = this[name];
 
-      object[name] = typeof toJSON === 'function' ? toJSON.call(value) : value;
+      object[name] = value?.toJSON?.() ?? value;
 
       return object;
     }

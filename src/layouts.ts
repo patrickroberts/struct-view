@@ -13,14 +13,15 @@ const layout = (
 ): Layout => (...extensions) => {
   const Base = reducer(extensions, StructView, 0);
 
-  function Derived(this: any, ...args: any): any {
+  function Derived(this: any, ...args: any[]): any {
     // StructConstructor overload
     if (this instanceof Derived) {
-      const buffer = args[0];
-      const byteOffset = args[1];
-      const byteLength = args[2];
+      const buffer = args.at(0) ?? new ArrayBuffer(Base.BYTES_PER_INSTANCE);
+      const byteOffset = args.at(1) ?? 0;
+      const byteLength = args.at(2) ?? buffer.byteLength - byteOffset;
+      const instance = new Base(buffer, byteOffset, byteLength);
 
-      return Object.setPrototypeOf(new Base(buffer, byteOffset, byteLength), Derived.prototype);
+      return Object.setPrototypeOf(instance, Derived.prototype);
     }
 
     switch (args.length) {

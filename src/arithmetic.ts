@@ -18,12 +18,12 @@ const arithmetic = <T extends Types>(
   type: T, littleEndian?: boolean,
 ): ArithmeticFactory<T> => (nameOrLength: string | number): any => {
   const Constructor = types[type];
+  const byteLength = Constructor.BYTES_PER_ELEMENT;
 
   switch (typeof nameOrLength) {
     // PropertyFactory overload
     case 'string': {
       const name = nameOrLength;
-      const byteLength = Constructor.BYTES_PER_ELEMENT;
       const get = `get${type}` as const;
       const set = `set${type}` as const;
 
@@ -40,7 +40,7 @@ const arithmetic = <T extends Types>(
     }
     // ArrayPropertyFactory overload
     case 'number': {
-      if (littleEndian !== nativeEndian()) {
+      if (littleEndian !== nativeEndian() && byteLength !== 1) {
         throw new TypeError('Cannot define numeric array property type because it does not match platform endianness');
       }
 
