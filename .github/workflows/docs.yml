@@ -23,8 +23,12 @@ jobs:
         npm run clean
         npm run lint
         npm run test -- --ci
-        bash <(curl -s https://codecov.io/bash)
         npm run docs
+
+    - name: Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4
