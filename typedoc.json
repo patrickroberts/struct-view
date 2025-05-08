@@ -1,7 +1,7 @@
 {
   "allReflectionsHaveOwnDocument": true,
   "disableOutputCheck": true,
-  "name": "template",
+  "name": "struct-view",
   "out": "docs",
   "preserveWatchOutput": true,
   "sourcefile-url-prefix": "https://github.com/patrickroberts/struct-view/blob/main/src/"
