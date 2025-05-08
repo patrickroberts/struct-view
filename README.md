@@ -13,37 +13,42 @@ This library enables developers to define and use packed binary structures in Ja
 ### Example Usage
 
 Writing a WAV header:
-```js
-// wav.js
-const { char, struct, uint16, uint32, uint8, union } = require('struct-view');
+```ts
+// wav.ts
+import { char, struct, uint16, uint32, uint8, union } from 'struct-view';
 
 const ChunkHeader = struct(
   char(4)('chunkId'),
   uint32('chunkSize'),
 );
 
+const SubChunk1 = struct(
+  ChunkHeader,
+  uint16('audioFormat'),
+  uint16('numChannels'),
+  uint32('sampleRate'),
+  uint32('byteRate'),
+  uint16('blockAlign'),
+  uint16('bitsPerSample'),
+);
+
 const WavHeader = struct(
   ChunkHeader,
   char(4)('format'),
-  struct(
-    ChunkHeader,
-    uint16('audioFormat'),
-    uint16('numChannels'),
-    uint32('sampleRate'),
-    uint32('byteRate'),
-    uint16('blockAlign'),
-    uint16('bitsPerSample'),
-  )('subChunk1'),
+  SubChunk1('subChunk1'),
   ChunkHeader('subChunk2'),
 );
 
-const RawWavHeader = union(
-  WavHeader,
-  uint8(WavHeader.BYTES_PER_INSTANCE)('raw'),
+const WavBytes = uint8(WavHeader.BYTES_PER_INSTANCE);
+
+const WavView = union(
+  WavHeader('header'),
+  WavBytes('bytes'),
 );
 
-const header = new RawWavHeader();
-const { subChunk1, subChunk2, raw } = header;
+const view = new WavView();
+const { header, bytes } = view;
+const { subChunk1, subChunk2 } = header;
 
 header.chunkId = 'RIFF';
 header.chunkSize = header.byteLength - ChunkHeader.BYTES_PER_INSTANCE;
@@ -60,12 +65,12 @@ subChunk1.bitsPerSample = 16;
 
 subChunk2.chunkId = 'data';
 
-process.stdout.write(raw);
+process.stdout.write(bytes);
 ```
 
 Output:
 ```
-node wav | xxd
+npx ts-node examples/wav | xxd
 00000000: 5249 4646 2400 0000 5741 5645 666d 7420  RIFF$...WAVEfmt 
 00000010: 1000 0000 0100 0100 44ac 0000 8858 0100  ........D....X..
 00000020: 0200 1000 6461 7461 0000 0000            ....data....
