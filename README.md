@@ -71,15 +71,14 @@ node wav | xxd
 00000020: 0200 1000 6461 7461 0000 0000            ....data....
 ```
 
-<!-- ### Documentation
+### Documentation
 
 API Reference available on [GitHub Pages](https://patrickroberts.github.io/struct-view)
 
 ### Code Coverage
 
-Available on [Codecov](https://codecov.io/gh/patrickroberts/struct-view) -->
+Available on [Codecov](https://codecov.io/gh/patrickroberts/struct-view)
 
 ### Todo
 
-* Documentation
 * Bitfield Support
