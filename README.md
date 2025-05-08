@@ -1,21 +1,14 @@
 # struct-view
 
-<!-- [![build](https://badgen.net/github/checks/patrickroberts/struct-view?icon=github&label=build)](https://github.com/patrickroberts/struct-view/actions)
-[![coverage](https://badgen.net/codecov/c/github/patrickroberts/struct-view?icon=codecov&label=coverage)](https://codecov.io/gh/patrickroberts/struct-view) -->
-[![license](https://badgen.net/github/license/patrickroberts/struct-view)](https://github.com/patrickroberts/struct-view/blob/master/LICENSE)
+[![build](https://badgen.net/github/checks/patrickroberts/struct-view?icon=github&label=build)](https://github.com/patrickroberts/struct-view/actions)
+[![coverage](https://badgen.net/codecov/c/github/patrickroberts/struct-view?icon=codecov&label=coverage)](https://codecov.io/gh/patrickroberts/struct-view)
+[![license](https://badgen.net/github/license/patrickroberts/struct-view)](https://github.com/patrickroberts/struct-view/blob/main/LICENSE)
 
 ## Simple DSL for defining binary structures in JavaScript
 
 ### Why struct-view?
 
 This library enables developers to define and use packed binary structures in JavaScript without any external dependencies. It is not intended for ABI-compliance or for use with foreign function interfaces.
-
-<!-- ### Installation
-
-```
-npm i struct-view
-yarn add struct-view
-``` -->
 
 ### Example Usage
 

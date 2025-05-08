@@ -4,5 +4,5 @@
   "name": "template",
   "out": "docs",
   "preserveWatchOutput": true,
-  "sourcefile-url-prefix": "https://github.com/patrickroberts/struct-view/blob/master/src/"
+  "sourcefile-url-prefix": "https://github.com/patrickroberts/struct-view/blob/main/src/"
 }

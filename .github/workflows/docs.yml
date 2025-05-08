@@ -1,0 +1,35 @@
+name: Docs
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Docs
+      run: |
+        npm ci
+        npm run clean
+        npm run lint
+        npm run test -- --ci
+        bash <(curl -s https://codecov.io/bash)
+        npm run docs
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages
+        clean: true
+        folder: docs
+        single-commit: true
