@@ -27,6 +27,6 @@ jobs:
       run: |
         npm ci
         npm run clean
-        npm run lint
         npm run test -- --ci
         npm run build
+        npm run lint

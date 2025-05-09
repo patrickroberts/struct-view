@@ -18,16 +18,16 @@
     "clean:build": "rimraf dst",
     "clean:docs": "rimraf docs/**/*.md",
     "clean": "concurrently 'npm:clean:*'",
-    "lint": "eslint . --ext .js,.ts",
     "test": "jest --coverage",
     "build": "rollup --config --environment NODE_ENV:production",
+    "lint": "eslint . --ext .js,.ts",
     "rebuild": "npm run clean:build && npm run build",
     "docs": "typedoc src/index.ts",
     "watch:test": "npm test -- --watch",
     "watch:build": "npm run build -- --environment NODE_ENV:development --watch",
     "watch:docs": "npm run docs -- --watch",
     "watch": "concurrently 'npm:watch:*'",
-    "prepublishOnly": "npm run clean && npm run lint && npm test && npm run build && npm run docs"
+    "prepublishOnly": "npm run clean && npm test && npm run build && npm run lint && npm run docs"
   },
   "author": "Patrick Roberts",
   "license": "MIT",
