@@ -3,8 +3,8 @@ import type { Decorator } from './decorator';
 const accessor = <K extends string, T>(
   name: K,
   byteLength: number,
-  get: (self: any, byteOffset: number) => T,
-  set: (self: any, byteOffset: number, value: T) => void,
+  getter: (self: any, byteOffset: number) => T,
+  setter: (self: any, byteOffset: number, value: T) => void,
 ): Decorator<Record<K, T>> => (Base: any, byteOffset: number): any => {
   if (name in Base.prototype) {
     throw new TypeError(`Property '${name}' has already been defined`);
@@ -14,11 +14,11 @@ const accessor = <K extends string, T>(
     static BYTES_PER_INSTANCE = Math.max(Base.BYTES_PER_INSTANCE, byteOffset + byteLength);
 
     get [name]() {
-      return get(this, byteOffset);
+      return getter(this, byteOffset);
     }
 
     set [name](value: T) {
-      set(this, byteOffset, value);
+      setter(this, byteOffset, value);
     }
 
     toJSON() {

@@ -13,12 +13,14 @@ type AllDecorators<Decorators extends any[]> = false extends {
 declare const DECORATORS_ONLY: unique symbol;
 
 export type Combine<Decorators extends any[]> =
-  AllDecorators<Decorators> extends true ?
-    StructType<Intersect<{
+  AllDecorators<Decorators> extends true
+    ? StructType<Intersect<{
       [I in Indices<Decorators>]: (
-        Decorators[I] extends StructType<infer T> ? T
-          : Decorators[I] extends Decorator<infer T> ? T
+        Decorators[I] extends StructType<infer T>
+          ? T
+          : Decorators[I] extends Decorator<infer T>
+            ? T
             : never
       );
-    }[Indices<Decorators>]>> :
-    { [DECORATORS_ONLY]: never };
+    }[Indices<Decorators>]>>
+    : { [DECORATORS_ONLY]: never };

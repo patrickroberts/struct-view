@@ -1,11 +1,12 @@
 import type { Intersect } from './intersect';
-import StructView from './struct-view';
+import type StructView from './struct-view';
 
 type Properties<T> = Intersect<{
   [P in keyof T]:
   // readonly array property of readonly elements is also enforced at runtime
-  T[P] extends (infer U)[] ? Readonly<Record<P, readonly Struct<U>[]>> :
-    Record<P, T[P]>;
+  T[P] extends (infer U)[]
+    ? Readonly<Record<P, readonly Struct<U>[]>>
+    : Record<P, T[P]>;
 }[keyof T]>;
 
 export type Struct<T> = StructView<T> & Properties<T>;

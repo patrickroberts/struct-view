@@ -1,25 +1,26 @@
 import accessor from './accessor';
 import type { ArrayPropertyFactory, PropertyFactory } from './factories';
-import memoize from './memoize';
 
-const getTextDecoder = memoize(() => new globalThis.TextDecoder());
-const getTextEncoder = memoize(() => new globalThis.TextEncoder());
+const textDecoder = new TextDecoder();
+const textEncoder = new TextEncoder();
 
 const string = (name: string, byteLength: number) => accessor(
   name,
   byteLength,
-  (self, byteOffset) => getTextDecoder().decode(
+  (self, byteOffset) => textDecoder.decode(
     new Uint8Array(self.buffer, self.byteOffset + byteOffset, byteLength),
   ),
-  (self, byteOffset, value) => getTextEncoder().encodeInto(
-    value,
-    new Uint8Array(self.buffer, self.byteOffset + byteOffset, byteLength),
-  ),
+  (self, byteOffset, value) => {
+    textEncoder.encodeInto(
+      value,
+      new Uint8Array(self.buffer, self.byteOffset + byteOffset, byteLength),
+    );
+  },
 );
 
 export interface CharFactory extends
   PropertyFactory<string>,
-  ArrayPropertyFactory<string> {}
+  ArrayPropertyFactory<string> { }
 
 export const char: CharFactory = (nameOrByteLength: string | number): any => {
   switch (typeof nameOrByteLength) {
