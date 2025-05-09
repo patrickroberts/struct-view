@@ -27,7 +27,7 @@ export default class StructView<T = {}> {
 
   constructor(
     // @ts-expect-error 'this' cannot be referenced in constructor arguments.
-    buffer = new ArrayBuffer(this.constructor.BYTES_PER_INSTANCE),
+    buffer: ArrayBufferLike = new ArrayBuffer(this.constructor.BYTES_PER_INSTANCE),
     byteOffset = 0,
     byteLength = buffer.byteLength - byteOffset,
   ) {

@@ -2,7 +2,7 @@ import { endianness } from 'os';
 import type { ArithmeticFactory } from '..';
 import { struct, float32, float32be, float32le, float64, float64be, float64le, int8, int16, int16be, int16le, int32, int32be, int32le, int64, int64be, int64le, uint8, uint16, uint16be, uint16le, uint32, uint32be, uint32le, uint64, uint64be, uint64le } from '..';
 
-const nativeEndian = endianness() === 'LE';
+const isLittleEndian = endianness() === 'LE';
 
 describe('arithmetic', () => {
   it.each([
@@ -22,11 +22,11 @@ describe('arithmetic', () => {
   const cases = [
     [float32be, 'getFloat32', false, 4],
     [float64be, 'getFloat64', false, 8],
-    [int8, 'getInt8', undefined, 1],
+    [int8, 'getInt8', true, 1],
     [int16be, 'getInt16', false, 2],
     [int32be, 'getInt32', false, 4],
     [int64be, 'getBigInt64', false, 8],
-    [uint8, 'getUint8', undefined, 1],
+    [uint8, 'getUint8', true, 1],
     [uint16be, 'getUint16', false, 2],
     [uint32be, 'getUint32', false, 4],
     [uint64be, 'getBigUint64', false, 8],
@@ -39,8 +39,8 @@ describe('arithmetic', () => {
     [uint32le, 'getUint32', true, 4],
     [uint64le, 'getBigUint64', true, 8],
   ] as const;
-  const nativeCases = cases.filter((row) => row[2] === nativeEndian);
-  const nonNativeCases = cases.filter((row) => row[2] !== nativeEndian);
+  const nativeCases = cases.filter((row) => row[2] === isLittleEndian);
+  const nonNativeCases = cases.filter((row) => row[2] !== isLittleEndian);
 
   type Types = typeof cases[number][0] extends ArithmeticFactory<infer T> ? T : never;
 
@@ -78,11 +78,11 @@ describe('arithmetic', () => {
       0x10, 0x32, 0x54, 0x76, 0x98, 0xba, 0xdc, 0xfe,
       0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef,
     ]);
-    const arrayView = ArrayView.from(bytes);
+    const { value } = ArrayView.from(bytes);
     const dataView = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
 
     expect(ArrayView.BYTES_PER_INSTANCE).toBe(2 * byteLength);
-    expect(arrayView.value[1]).toBe(dataView[get](arrayView.value.BYTES_PER_ELEMENT, nativeEndian));
+    expect(value[1]).toBe(dataView[get](value.BYTES_PER_ELEMENT, isLittleEndian));
   });
 
   it.each(nativeCases)('should write bytes of array property', (array: ArithmeticFactory<Types>, get, _, byteLength) => {
@@ -99,7 +99,7 @@ describe('arithmetic', () => {
 
     arrayView.value = new TypedArray([Primitive(0), expected]);
 
-    expect(dataView[get](byteLength, nativeEndian)).toBe(expected);
+    expect(dataView[get](byteLength, isLittleEndian)).toBe(expected);
   });
 
   it.each(nonNativeCases)('should throw TypeError on unsupported array endianness', (array: ArithmeticFactory<Types>) => {

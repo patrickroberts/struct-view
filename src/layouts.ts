@@ -16,12 +16,7 @@ const layout = (
   function Derived(this: any, ...args: any[]): any {
     // StructConstructor overload
     if (this instanceof Derived) {
-      const buffer = args.at(0) ?? new ArrayBuffer(Base.BYTES_PER_INSTANCE);
-      const byteOffset = args.at(1) ?? 0;
-      const byteLength = args.at(2) ?? buffer.byteLength - byteOffset;
-      const instance = new Base(buffer, byteOffset, byteLength);
-
-      return Object.setPrototypeOf(instance, Derived.prototype);
+      return Object.setPrototypeOf(new Base(...args), Derived.prototype);
     }
 
     switch (args.length) {
