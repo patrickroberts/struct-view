@@ -3,8 +3,9 @@ export { float32, float32be, float32le, float64, float64be, float64le, int8, int
 export type { CharFactory } from './char';
 export { char } from './char';
 export type { Decorator } from './decorator';
-export type { ArrayPropertyFactory, PropertyFactory } from './factories';
+export type { ArrayPropertyFactory, PropertyFactory, ReadonlyArrayPropertyFactory, ReadonlyPropertyFactory } from './factories';
 export type { Layout } from './layouts';
 export { struct, union } from './layouts';
 export type { Struct, StructConstructor } from './struct';
 export type { StructType } from './struct-type';
+export { default as StructView } from './struct-view';

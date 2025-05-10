@@ -36,13 +36,13 @@ const layout = (
         const nameOrLength = args[0];
 
         switch (typeof nameOrLength) {
-          // PropertyFactory overload
+          // ReadonlyPropertyFactory overload
           case 'string': {
             const name = nameOrLength;
 
             return named(Constructor, Constructor.BYTES_PER_INSTANCE, name);
           }
-          // ArrayPropertyFactory overload
+          // ReadonlyArrayPropertyFactory overload
           case 'number': {
             const length = nameOrLength;
 

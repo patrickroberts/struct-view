@@ -92,18 +92,32 @@ describe('arithmetic', () => {
     const bytes = new Uint8Array(16);
     const arrayView = ArrayView.from(bytes);
     const dataView = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-    const typedArray = arrayView.value as any;
-    const TypedArray = typedArray.constructor;
+    const typedArray = arrayView.value;
     const Primitive = typedArray[0].constructor;
     const expected = Primitive(42);
 
-    arrayView.value = new TypedArray([Primitive(0), expected]);
+    typedArray[0] = Primitive(0);
+    typedArray[1] = expected;
 
     expect(dataView[get](byteLength, isLittleEndian)).toBe(expected);
   });
 
   it.each(nonNativeCases)('should throw TypeError on unsupported array endianness', (array: ArithmeticFactory<Types>) => {
     expect(() => array(2)).toThrow(TypeError);
+  });
+
+  it.each(nativeCases)('should throw TypeError on assignment of array property', (array: ArithmeticFactory<Types>) => {
+    const ArrayView = struct(
+      array(2)('value'),
+    );
+    type ArrayViewType = InstanceType<(typeof ArrayView)>;
+    const arrayView: { value: ArrayViewType['value'] } = new ArrayView();
+    const typedArray = arrayView.value;
+    const TypedArray = typedArray.constructor as any;
+    const Primitive = typedArray[0].constructor;
+    const otherArray = new TypedArray([Primitive(0), Primitive(42)]);
+
+    expect(() => { arrayView.value = otherArray; }).toThrow(TypeError);
   });
 
   it.each(cases)('should throw TypeError on invalid factory call', (factory: any) => {

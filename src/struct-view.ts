@@ -10,10 +10,10 @@ export default class StructView<T = {}> {
   static from(
     this: StructConstructor<unknown>,
     array: ArrayBufferView,
-    byteOffset = array.byteOffset,
+    byteOffset = 0,
     byteLength = this.BYTES_PER_INSTANCE,
   ): Struct<unknown> {
-    return new this(array.buffer, byteOffset, byteLength);
+    return new this(array.buffer, array.byteOffset + byteOffset, byteLength);
   }
 
   /** @internal */

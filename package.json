@@ -1,6 +1,6 @@
 {
   "name": "struct-view",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Simple DSL for defining binary structures in JavaScript",
   "repository": "github:patrickroberts/struct-view",
   "main": "dst/cjs/struct-view.js",

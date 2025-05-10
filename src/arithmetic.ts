@@ -1,12 +1,12 @@
 import accessor from './accessor';
-import type { ArrayPropertyFactory, PropertyFactory } from './factories';
+import type { PropertyFactory, ReadonlyArrayPropertyFactory } from './factories';
 import named from './named';
 import type { TypedArray, Types } from './types';
 import { types } from './types';
 
 export interface ArithmeticFactory<T extends Types> extends
   PropertyFactory<TypedArray<T>[number]>,
-  ArrayPropertyFactory<TypedArray<T>> { }
+  ReadonlyArrayPropertyFactory<TypedArray<T>> { }
 
 const arithmetic = <T extends Types>(
   type: T, littleEndian = true,
@@ -32,7 +32,7 @@ const arithmetic = <T extends Types>(
         )[setter](0, value as number & bigint, littleEndian),
       );
     }
-    // ArrayPropertyFactory overload
+    // ReadonlyArrayPropertyFactory overload
     case 'number': {
       if (!littleEndian) {
         throw new TypeError('Cannot define numeric array property type because it does not match platform endianness');

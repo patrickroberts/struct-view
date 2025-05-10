@@ -1,24 +1,24 @@
 import accessor from './accessor';
 import type { Decorator } from './decorator';
-import type { StructConstructor } from './struct';
+import type { Struct, StructConstructor } from './struct';
 
 const array = <K extends string, T>(
   Constructor: StructConstructor<T>,
   length: number,
   name: K,
-): Decorator<Record<K, T[]>> => {
+): Decorator<Readonly<Record<K, readonly Struct<T>[]>>> => {
   const byteLength = length * Constructor.BYTES_PER_INSTANCE;
 
   return accessor(
     name,
     byteLength,
-    (self, byteOffset): any => {
+    (self, byteOffset) => {
       const value = [];
 
       for (let index = 0; index < length; ++index) {
         value[index] = Constructor.from(
           self,
-          self.byteOffset + byteOffset + index * Constructor.BYTES_PER_INSTANCE,
+          byteOffset + index * Constructor.BYTES_PER_INSTANCE,
         );
       }
 

@@ -11,7 +11,7 @@ const isTypedArray = (
 
 const named = <K extends string, T extends StructConstructor<any> | TypedArrayConstructor<Types>>(
   Constructor: T, length: number, name: K,
-): Decorator<Record<K, InstanceType<T>>> => {
+): Decorator<Readonly<Record<K, InstanceType<T>>>> => {
   const byteLength = length * (isTypedArray(Constructor) ? Constructor.BYTES_PER_ELEMENT : 1);
 
   return accessor<K, any>(
@@ -20,11 +20,8 @@ const named = <K extends string, T extends StructConstructor<any> | TypedArrayCo
     (self, byteOffset) => (
       new Constructor(self.buffer, self.byteOffset + byteOffset, length)
     ),
-    (self, byteOffset, value) => {
-      const dst = new Uint8Array(self.buffer, self.byteOffset + byteOffset, byteLength);
-      const src = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
-
-      dst.set(src);
+    () => {
+      throw new TypeError(`Cannot set property ${name} which has only a getter`);
     },
   );
 };
